@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: 'Orbitron', monospace;
+  --font-mono: 'Share Tech Mono', monospace;
+  --font-body: 'DM Sans', sans-serif;
+  
+  --navy: #0A0E1A;
+  --gain: #00FF87;
+  --loss: #FF4560;
+  --gold: #FFD700;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: var(--navy);
+  color: white;
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: #0D1220;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e2d45;
+  border-radius: 2px;
+}
+
+/* CRT scanline overlay */
+.scanline-overlay {
+  pointer-events: none;
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.03) 2px,
+    rgba(0, 0, 0, 0.03) 4px
+  );
+  z-index: 9999;
+}
+
+/* Number flash animations */
+.flash-gain {
+  animation: flash-gain 0.8s ease-out;
+}
+.flash-loss {
+  animation: flash-loss 0.8s ease-out;
+}
+
+@keyframes flash-gain {
+  0% { background-color: rgba(0, 255, 135, 0.4); color: #00FF87; }
+  100% { background-color: transparent; }
+}
+
+@keyframes flash-loss {
+  0% { background-color: rgba(255, 69, 96, 0.4); color: #FF4560; }
+  100% { background-color: transparent; }
+}
+
+/* Typewriter cursor */
+.typewriter-cursor::after {
+  content: '█';
+  animation: blink 1s step-end infinite;
+  color: var(--gold);
+  margin-left: 2px;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
+}
+
+/* Glowing border effect */
+.glow-gain {
+  box-shadow: 0 0 12px rgba(0, 255, 135, 0.3), inset 0 0 12px rgba(0, 255, 135, 0.05);
+}
+.glow-loss {
+  box-shadow: 0 0 12px rgba(255, 69, 96, 0.3), inset 0 0 12px rgba(255, 69, 96, 0.05);
+}
+.glow-gold {
+  box-shadow: 0 0 16px rgba(255, 215, 0, 0.4), inset 0 0 16px rgba(255, 215, 0, 0.05);
+}
+
+/* Progress bar gradient */
+.timer-bar {
+  background: linear-gradient(90deg, #FF4560, #FFD700, #00FF87);
+  transition: width 1s linear;
+}
+
+/* Grid noise texture */
+.grid-texture {
+  background-image: 
+    linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 40px 40px;
+}
