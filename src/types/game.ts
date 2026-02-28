@@ -118,7 +118,7 @@ export interface PredictionResult {
 }
 
 export interface BridgeAnswers {
-  invests: boolean;
+  invests: "yes" | "no" | "student";
   accountType: string;
   techAllocation: number;
 }
