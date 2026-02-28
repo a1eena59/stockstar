@@ -1,7 +1,6 @@
 "use client"
 import { createContext, useContext, useState, ReactNode } from "react"
-import { Stock} from "@/src/types/game";  
-import { Trade } from "@/src/types/game";
+import { StockName,StockPrice,Trade,Stock} from "@/src/types/game";  
 
 interface GameState {
   gameId: string | null

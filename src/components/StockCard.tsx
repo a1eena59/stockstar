@@ -1,35 +1,50 @@
+// 
+
 "use client";
 
 import { useState, useCallback } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { StockName, StockPrice, TradeAction, Trade } from "@/src/types/game";
-import { STOCKS } from "@/src/types/game";  // Import STOCKS from types, not from useGameState
-import { getSectorColor } from "@/src/hooks/useGameState";  // This is correct, keep it
+import { STOCKS } from "@/src/types/game";
+import { getSectorColor } from "@/src/hooks/useGameState";
 
 interface StockCardProps {
   stock: StockPrice;
   trade: Trade | undefined;
   onTrade: (stock: StockName, trade: Trade) => void;
   locked: boolean;
+  owned?: number; // how many shares player currently holds
 }
 
-export default function StockCard({ stock, trade, onTrade, locked }: StockCardProps) {
+export default function StockCard({ stock, trade, onTrade, locked, owned = 0 }: StockCardProps) {
   const [qty, setQty] = useState(1);
   const info = STOCKS[stock.name];
   const isGain = stock.changePct >= 0;
   const hasChange = stock.change !== 0;
+  const selectedAction = trade?.action;
 
-  const handleAction = useCallback((action: TradeAction) => {
-    onTrade(stock.name, { stock: stock.name, action, quantity: qty });
-  }, [stock.name, qty, onTrade]);
+  // Max sell quantity is what the player owns
+  const maxSell = owned;
+  const canSell = owned > 0;
+
+  const handleAction = useCallback(
+    (action: TradeAction) => {
+      // Prevent sell if player owns nothing
+      if (action === "sell" && !canSell) return;
+      // Clamp sell quantity to owned amount
+      const finalQty = action === "sell" ? Math.min(qty, maxSell) : qty;
+      onTrade(stock.name, { stock: stock.name, action, quantity: finalQty });
+    },
+    [stock.name, qty, onTrade, canSell, maxSell]
+  );
 
   const actionColor = {
-    buy: "border-gain/60 bg-gain/10 text-gain hover:bg-gain/20",
-    sell: "border-loss/60 bg-loss/10 text-loss hover:bg-loss/20",
+    buy:  "border-gain/60 bg-gain/10 text-gain hover:bg-gain/20",
+    sell: canSell
+      ? "border-loss/60 bg-loss/10 text-loss hover:bg-loss/20"
+      : "border-white/10 bg-white/2 text-white/20 cursor-not-allowed",
     hold: "border-white/20 bg-white/5 text-white/60 hover:bg-white/10",
   };
-
-  const selectedAction = trade?.action;
 
   return (
     <motion.div
@@ -45,8 +60,8 @@ export default function StockCard({ stock, trade, onTrade, locked }: StockCardPr
       animate={hasChange ? { borderColor: isGain ? "rgba(0,255,135,0.3)" : "rgba(255,69,96,0.3)" } : {}}
       transition={{ duration: 0.5 }}
     >
-      {/* Sector tag */}
-      <div className="flex items-start justify-between mb-3">
+      {/* Top row — name + price */}
+      <div className="flex items-start justify-between mb-2">
         <div>
           <div className="flex items-center gap-2">
             <span className="font-display text-sm font-bold text-white">{stock.name}</span>
@@ -72,6 +87,7 @@ export default function StockCard({ stock, trade, onTrade, locked }: StockCardPr
           >
             ${stock.price.toFixed(2)}
           </motion.div>
+
           {hasChange && (
             <motion.div
               initial={{ opacity: 0, y: -4 }}
@@ -84,9 +100,26 @@ export default function StockCard({ stock, trade, onTrade, locked }: StockCardPr
         </div>
       </div>
 
+      {/* Owned shares row */}
+      <div className="flex items-center justify-between mb-3">
+        {owned > 0 ? (
+          <div className="flex items-center gap-1.5">
+            <div className="w-1.5 h-1.5 rounded-full bg-gain/60" />
+            <span className="text-xs font-mono text-white/50">
+              Owned: <span className="text-white/80 font-bold">{owned}</span>
+            </span>
+            <span className="text-xs font-mono text-white/30">
+              (${(owned * stock.price).toFixed(0)} value)
+            </span>
+          </div>
+        ) : (
+          <span className="text-xs font-mono text-white/20">No position</span>
+        )}
+      </div>
+
       {/* Trade controls */}
       <div className="flex items-center gap-2">
-        {/* Qty */}
+        {/* Qty spinner */}
         <div className="flex items-center gap-1 mr-1">
           <button
             onClick={() => setQty(Math.max(1, qty - 1))}
@@ -95,7 +128,7 @@ export default function StockCard({ stock, trade, onTrade, locked }: StockCardPr
           >
             −
           </button>
-          <span className="w-4 text-center text-xs font-mono text-white/60">{qty}</span>
+          <span className="w-5 text-center text-xs font-mono text-white/60">{qty}</span>
           <button
             onClick={() => setQty(Math.min(100, qty + 1))}
             disabled={locked}
@@ -105,13 +138,14 @@ export default function StockCard({ stock, trade, onTrade, locked }: StockCardPr
           </button>
         </div>
 
-        {/* Action buttons */}
+        {/* Buy / Sell / Hold buttons */}
         {(["buy", "sell", "hold"] as TradeAction[]).map((action) => (
           <button
             key={action}
             onClick={() => handleAction(action)}
-            disabled={locked}
-            className={`flex-1 py-1.5 rounded-lg border text-xs font-bold uppercase tracking-wider transition-all duration-150 disabled:opacity-40 disabled:cursor-not-allowed ${
+            disabled={locked || (action === "sell" && !canSell)}
+            title={action === "sell" && !canSell ? "You don't own any shares to sell" : undefined}
+            className={`flex-1 py-1.5 rounded-lg border text-xs font-bold uppercase tracking-wider transition-all duration-150 disabled:cursor-not-allowed ${
               selectedAction === action
                 ? action === "buy"
                   ? "border-gain bg-gain/20 text-gain ring-1 ring-gain/40"
@@ -126,14 +160,30 @@ export default function StockCard({ stock, trade, onTrade, locked }: StockCardPr
         ))}
       </div>
 
-      {/* Selected indicator */}
+      {/* Sell warning — shows if player tries to sell more than owned */}
+      {selectedAction === "sell" && qty > maxSell && maxSell > 0 && (
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-xs text-loss/70 font-mono mt-2"
+        >
+          Max sell: {maxSell} shares
+        </motion.p>
+      )}
+
+      {/* Selected action dot indicator */}
       {selectedAction && (
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           className="absolute top-2 right-2 w-1.5 h-1.5 rounded-full"
           style={{
-            background: selectedAction === "buy" ? "#00FF87" : selectedAction === "sell" ? "#FF4560" : "#9CA3AF",
+            background:
+              selectedAction === "buy"
+                ? "#00FF87"
+                : selectedAction === "sell"
+                ? "#FF4560"
+                : "#9CA3AF",
           }}
         />
       )}

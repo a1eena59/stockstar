@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { GameProvider } from "../context/GameContext";
 
 export const metadata: Metadata = {
   title: "Stock★Star — Market Simulation",

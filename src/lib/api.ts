@@ -1,4 +1,4 @@
-const BASE_URL = "http://10.138.71.113:8000";
+const BASE_URL = "http://localhost:8000"
 
 export const api = {
   startGame: async (playerName: string) => {
