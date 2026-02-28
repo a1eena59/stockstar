@@ -40,22 +40,7 @@ Respond ONLY with a valid JSON object in exactly this format, nothing else:
 
     raw = response.choices[0].message.content.strip()
     print(f"  🔍 Raw sentiment response: {raw}")
-    # try:
-    #     # Clean up response in case model adds extra text
-    #     start = raw.find("{")
-    #     end = raw.rfind("}") + 1
-    #     json_str = raw[start:end]
-    #     result = json.loads(json_str)
-    #     return result
-    # except Exception:
-    #     # Safe fallback if parsing fails
-    #     return {
-    #         "Tech": 0.0,
-    #         "Energy": 0.0,
-    #         "Healthcare": 0.0,
-    #         "Consumer": 0.0,
-    #         "reasoning": "Unable to parse sentiment"
-    #     }
+    
     try:
         raw = response.choices[0].message.content.strip()
         
