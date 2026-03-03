@@ -75,9 +75,7 @@ export default function CountdownTimer({ seconds, onComplete, paused }: Countdow
           </motion.span>
         </div>
       </motion.div>
-      <span className="text-xs text-white/30 font-mono uppercase tracking-widest">
-        seconds
-      </span>
+    
     </div>
   );
 }
