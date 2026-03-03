@@ -48,7 +48,7 @@ def calculate_new_price(current_price: float, sentiment_score: float) -> float:
     sentiment_score is between -1 and 1.
     Max movement is 8% in either direction.
     """
-    from config import PRICE_MOVEMENT_MULTIPLIER
+    from app.config import PRICE_MOVEMENT_MULTIPLIER
     change = sentiment_score * PRICE_MOVEMENT_MULTIPLIER
     new_price = current_price * (1 + change)
     return round(new_price, 2)
