@@ -716,14 +716,17 @@ export default function GamePage() {
 
         {/* Center */}
         <div className="flex flex-col gap-5 min-h-0">
-          <AnimatePresence>
+            <AnimatePresence>
             {isTrading && (
-              <motion.div initial={{ opacity: 0, scale: 0.8 }} animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }} className="flex justify-center">
-                <CountdownTimer seconds={60} onComplete={handleTradeTimerComplete} paused={!isTrading} />
+              <motion.div
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              >
+              <CountdownTimer seconds={30} onComplete={handleTradeTimerComplete} paused={!isTrading} />
               </motion.div>
             )}
-          </AnimatePresence>
+            </AnimatePresence> 
 
           <div className="flex-1 grid grid-cols-2 gap-4 content-start overflow-y-auto">
             {(Object.keys(state.prices) as StockName[]).map((name) => (
