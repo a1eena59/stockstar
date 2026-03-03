@@ -1,46 +1,4 @@
-# from fastapi import FastAPI
-# from fastapi.middleware.cors import CORSMiddleware
 
-# app = FastAPI(title="Stock Star API")
-
-# # Allow frontend to talk to backend
-# app.add_middleware(
-#     CORSMiddleware,
-#     allow_origins=["http://localhost:3000"],
-#     allow_credentials=True,
-#     allow_methods=["*"],
-#     allow_headers=["*"],
-# )
-
-
-# @app.get("/")
-# def root():
-#     return {"status": "Stock Star backend running"}
-
-
-# @app.post("/game/start")
-# def game_start():
-#     return {"message": "game start - coming soon"}
-
-
-# @app.post("/game/trade")
-# def game_trade():
-#     return {"message": "game trade - coming soon"}
-
-
-# @app.post("/game/resolve")
-# def game_resolve():
-#     return {"message": "game resolve - coming soon"}
-
-
-# @app.post("/game/debrief")
-# def game_debrief():
-#     return {"message": "game debrief - coming soon"}
-
-
-# @app.post("/game/bridge")
-# def game_bridge():
-#     return {"message": "game bridge - coming soon"}
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
@@ -50,6 +8,8 @@ from typing import Optional
 import uuid
 import json
 import asyncio
+import os
+import uvicorn
 
 from app.config import STARTING_CASH, TOTAL_ROUNDS
 from app.data.stocks import STOCKS, fetch_all_prices, calculate_new_price
@@ -58,11 +18,16 @@ from app.agents.opponent import run_ai_opponent
 from app.rag.coach import load_principles, generate_debrief, generate_bridge_advice
 
 app = FastAPI(title="Stock Star API")
+if __name__ == "__main__":
+    # Use the port Render gives you, default to 8000 locally
+    port = int(os.environ.get("PORT", 8000))
+    uvicorn.run("app.main:app", host="0.0.0.0", port=port)
+    
 
 # Allow frontend to call backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000","https://stockstar.vercel.app","https://stockstar-8f48.vercel.app"
+    allow_origins=["http://localhost:3000","https://stockstar.vercel.app","https://stockstar-8f48.vercel.app",
         "https://*.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
