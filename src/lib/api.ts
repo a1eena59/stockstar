@@ -1,4 +1,4 @@
-const BASE_URL = "https://stockstar-1.onrender.com"
+const BASE_URL = "http://127.0.0.1:8000"
 
 export const api = {
   startGame: async (playerName: string) => {
