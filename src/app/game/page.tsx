@@ -722,6 +722,7 @@ export default function GamePage() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.8 }}
+              className="flex justify-center items-center py-2"
               >
               <CountdownTimer seconds={30} onComplete={handleTradeTimerComplete} paused={!isTrading} />
               </motion.div>
