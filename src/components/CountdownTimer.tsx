@@ -1,6 +1,87 @@
-"use client";
+// "use client";
 
-import { useEffect, useState, useCallback } from "react";
+// import { useEffect, useState, useCallback } from "react";
+// import { motion } from "framer-motion";
+
+// interface CountdownTimerProps {
+//   seconds: number;
+//   onComplete: () => void;
+//   paused?: boolean;
+// }
+
+// export default function CountdownTimer({ seconds, onComplete, paused }: CountdownTimerProps) {
+//   const [timeLeft, setTimeLeft] = useState(seconds);
+
+//   useEffect(() => {
+//     setTimeLeft(seconds);
+//   }, [seconds]);
+
+//   useEffect(() => {
+//     if (paused) return;
+//     if (timeLeft <= 0) {
+//       onComplete();
+//       return;
+//     }
+//     const t = setTimeout(() => setTimeLeft((s) => s - 1), 1000);
+//     return () => clearTimeout(t);
+//   }, [timeLeft, paused, onComplete]);
+
+//   const radius = 28;
+//   const circumference = 2 * Math.PI * radius;
+//   const progress = timeLeft / seconds;
+//   const strokeDashoffset = circumference * (1 - progress);
+
+//   const color = progress > 0.5 ? "#00FF87" : progress > 0.25 ? "#FFD700" : "#FF4560";
+//   const isUrgent = timeLeft <= 10;
+
+//   return (
+//     <div className="flex flex-col items-center gap-1">
+//       <motion.div
+//         animate={isUrgent ? { scale: [1, 1.05, 1] } : {}}
+//         transition={{ repeat: Infinity, duration: 0.8 }}
+//         className="relative"
+//       >
+//         <svg width={72} height={72} className="-rotate-90">
+//           {/* Track */}
+//           <circle
+//             cx={36} cy={36} r={radius}
+//             fill="none"
+//             stroke="rgba(255,255,255,0.05)"
+//             strokeWidth={4}
+//           />
+//           {/* Progress */}
+//           <motion.circle
+//             cx={36} cy={36} r={radius}
+//             fill="none"
+//             stroke={color}
+//             strokeWidth={4}
+//             strokeLinecap="round"
+//             strokeDasharray={circumference}
+//             strokeDashoffset={strokeDashoffset}
+//             style={{ filter: `drop-shadow(0 0 6px ${color})` }}
+//             transition={{ duration: 0.9, ease: "linear" }}
+//           />
+//         </svg>
+
+//         <div className="absolute inset-0 flex items-center justify-center">
+//           <motion.span
+//             key={timeLeft}
+//             initial={{ scale: 1.2, opacity: 0 }}
+//             animate={{ scale: 1, opacity: 1 }}
+//             className="font-mono font-bold text-xl"
+//             style={{ color }}
+//           >
+//             {timeLeft}
+//           </motion.span>
+//         </div>
+//       </motion.div>
+    
+//     </div>
+//   );
+// }
+
+"use client";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
 interface CountdownTimerProps {
@@ -26,56 +107,61 @@ export default function CountdownTimer({ seconds, onComplete, paused }: Countdow
     return () => clearTimeout(t);
   }, [timeLeft, paused, onComplete]);
 
-  const radius = 28;
+  const radius = 36;
   const circumference = 2 * Math.PI * radius;
   const progress = timeLeft / seconds;
   const strokeDashoffset = circumference * (1 - progress);
-
   const color = progress > 0.5 ? "#00FF87" : progress > 0.25 ? "#FFD700" : "#FF4560";
   const isUrgent = timeLeft <= 10;
 
   return (
-    <div className="flex flex-col items-center gap-1">
-      <motion.div
-        animate={isUrgent ? { scale: [1, 1.05, 1] } : {}}
-        transition={{ repeat: Infinity, duration: 0.8 }}
-        className="relative"
-      >
-        <svg width={72} height={72} className="-rotate-90">
-          {/* Track */}
-          <circle
-            cx={36} cy={36} r={radius}
-            fill="none"
-            stroke="rgba(255,255,255,0.05)"
-            strokeWidth={4}
-          />
-          {/* Progress */}
-          <motion.circle
-            cx={36} cy={36} r={radius}
-            fill="none"
-            stroke={color}
-            strokeWidth={4}
-            strokeLinecap="round"
-            strokeDasharray={circumference}
-            strokeDashoffset={strokeDashoffset}
-            style={{ filter: `drop-shadow(0 0 6px ${color})` }}
-            transition={{ duration: 0.9, ease: "linear" }}
-          />
-        </svg>
+    <motion.div
+      animate={isUrgent ? { scale: [1, 1.06, 1] } : {}}
+      transition={{ repeat: Infinity, duration: 0.8 }}
+      className="relative inline-flex items-center justify-center"
+    >
+      {/* SVG ring — number sits on top of this */}
+      <svg width={90} height={90} className="-rotate-90">
+        {/* Background track */}
+        <circle
+          cx={45} cy={45} r={radius}
+          fill="none"
+          stroke="rgba(255,255,255,0.06)"
+          strokeWidth={5}
+        />
+        {/* Progress arc */}
+        <motion.circle
+          cx={45} cy={45} r={radius}
+          fill="none"
+          stroke={color}
+          strokeWidth={5}
+          strokeLinecap="round"
+          strokeDasharray={circumference}
+          strokeDashoffset={strokeDashoffset}
+          style={{ filter: `drop-shadow(0 0 8px ${color})` }}
+          transition={{ duration: 0.9, ease: "linear" }}
+        />
+      </svg>
 
-        <div className="absolute inset-0 flex items-center justify-center">
-          <motion.span
-            key={timeLeft}
-            initial={{ scale: 1.2, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="font-mono font-bold text-xl"
-            style={{ color }}
-          >
-            {timeLeft}
-          </motion.span>
-        </div>
-      </motion.div>
-    
-    </div>
+      {/* Number centered inside the ring */}
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <motion.span
+          key={timeLeft}
+          initial={{ scale: 1.3, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.2 }}
+          className="font-mono font-black leading-none"
+          style={{ color, fontSize: timeLeft >= 10 ? "1.6rem" : "1.8rem" }}
+        >
+          {timeLeft}
+        </motion.span>
+        <span
+          className="font-mono uppercase tracking-widest leading-none mt-0.5"
+          style={{ color, fontSize: "0.45rem", opacity: 0.7 }}
+        >
+          sec
+        </span>
+      </div>
+    </motion.div>
   );
 }
