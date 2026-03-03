@@ -178,7 +178,7 @@
 
 #     return response.choices[0].message.content
 from groq import Groq
-from config import GROQ_API_KEY, GROQ_MODEL
+from app.config import GROQ_API_KEY, GROQ_MODEL
 import os
 import re
 

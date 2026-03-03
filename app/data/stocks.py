@@ -1,5 +1,5 @@
 import requests
-from config import ALPHA_VANTAGE_KEY
+from app.config import ALPHA_VANTAGE_KEY
 
 STOCKS = [
     {"id": "cloudcorp", "display_name": "CloudCorp", "ticker": "MSFT", "sector": "Tech", "base_price": 415.00},
