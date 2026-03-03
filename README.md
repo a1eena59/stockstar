@@ -28,7 +28,7 @@ Simulating a fun game where people can have practical experience without spendin
 
 **For Software:**
 - Languages used: Python, Typescript
-- Frameworks used: NextJS, Python Flask, LangChain, LangGraph
+- Frameworks used: NextJS, Python FastAPI, LangChain, LangGraph
 - Libraries used: React, Framer Motion, Recharts, Tailwind CSS, shadcn/ui, Lucide React,  ChromaDB, Sentence Transformers (all-MiniLM-L6-v2), Supabase 
 - Tools used: VS Code, Git, Groq API KEYS, Alpha Vantage API KEY.
 
