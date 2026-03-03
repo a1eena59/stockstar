@@ -51,20 +51,22 @@ import uuid
 import json
 import asyncio
 
-from app.config import STARTING_CASH, TOTAL_ROUNDS
-from app.data.stocks import STOCKS, fetch_all_prices, calculate_new_price
-from app.data.news import fetch_market_news, get_correct_sector
-from app.agents.opponent import run_ai_opponent
-from app.rag.coach import load_principles, generate_debrief, generate_bridge_advice
+from config import STARTING_CASH, TOTAL_ROUNDS
+from data.stocks import STOCKS, fetch_all_prices, calculate_new_price
+from data.news import fetch_market_news, get_correct_sector
+from agents.opponent import run_ai_opponent
+from rag.coach import load_principles, generate_debrief, generate_bridge_advice
 
 app = FastAPI(title="Stock Star API")
 
 # Allow frontend to call backend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["http://localhost:3000","https://stockstar.vercel.app","https://stockstar-8f48.vercel.app"
+        "https://*.vercel.app"],
     allow_credentials=True,
     allow_methods=["*"],
+
     allow_headers=["*"],
 )
 

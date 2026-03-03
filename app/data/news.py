@@ -1,5 +1,5 @@
 import requests
-from app.config import ALPHA_VANTAGE_KEY
+from config import ALPHA_VANTAGE_KEY
 
 # Fallback headlines if API fails
 FALLBACK_HEADLINES = [

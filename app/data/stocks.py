@@ -1,5 +1,5 @@
 import requests
-from app.config import ALPHA_VANTAGE_KEY
+from config import ALPHA_VANTAGE_KEY
 
 STOCKS = [
     {"id": "cloudcorp", "display_name": "CloudCorp", "ticker": "MSFT", "sector": "Tech", "base_price": 415.00},
@@ -48,7 +48,7 @@ def calculate_new_price(current_price: float, sentiment_score: float) -> float:
     sentiment_score is between -1 and 1.
     Max movement is 8% in either direction.
     """
-    from app.config import PRICE_MOVEMENT_MULTIPLIER
+    from config import PRICE_MOVEMENT_MULTIPLIER
     change = sentiment_score * PRICE_MOVEMENT_MULTIPLIER
     new_price = current_price * (1 + change)
     return round(new_price, 2)

@@ -1,6 +1,6 @@
 from groq import Groq
-from app.config import GROQ_API_KEY, GROQ_MODEL_ADVANCED
-from app.data.stocks import STOCKS, SECTOR_MAP, get_stocks_by_sector
+from config import GROQ_API_KEY, GROQ_MODEL_ADVANCED
+from data.stocks import STOCKS, SECTOR_MAP, get_stocks_by_sector
 import json
 
 groq_client = Groq(api_key=GROQ_API_KEY)
